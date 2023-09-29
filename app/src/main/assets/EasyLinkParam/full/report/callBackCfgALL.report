@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Root version="000001" Name="CallBackConfig">
+	<Item  CallBackName="SetParamByClient">true</Item>
+	<Item  CallBackName="SetEmvAidParam">true</Item>
+	<Item  CallBackName="SetICSParam">true</Item>
+	<Item  CallBackName="ReportReadCardOkStatus">true</Item>
+</Root>
