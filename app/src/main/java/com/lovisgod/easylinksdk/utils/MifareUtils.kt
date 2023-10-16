@@ -1,5 +1,7 @@
 package com.lovisgod.easylinksdk.utils
 
+import android.util.Log
+
 object MifareUtils {
 
     fun decimalToByteArray(value: Int, numBytes: Int = 4): ByteArray {
@@ -32,6 +34,15 @@ object MifareUtils {
         println("Value  byte array: ${byteArray.joinToString { "0x%02X".format(it) }}")
 
         return byteArray
+    }
+
+    fun byteArrayHexStringToDecimal(byteArray: ByteArray): Int {
+        var result = 0
+        for (i in 0 until byteArray.size) {
+         result = result or ((byteArray[i].toInt() and 0xFF) shl (8 * i))
+        }
+        println("Decimal value: $result")
+        return result
     }
 
 

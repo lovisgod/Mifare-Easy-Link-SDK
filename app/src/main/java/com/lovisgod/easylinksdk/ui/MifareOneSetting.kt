@@ -195,7 +195,11 @@ class MifareOneSetting() : Activity(), View.OnClickListener, MifareInternalEvent
                 )
                 Log.d("readxxxxx","readblockvalue:: ${Utils.bcd2Str(readBlkValue)}")
                 if (ret == 0) {
-
+                   val balanceString = Utils.bcd2Str(readBlkValue).take(8)
+                   Log.d("readxxxxx","balance string:: ${balanceString}")
+                   val balanceByte = MifareUtils.hexadecimalStringToByteArray(balanceString)
+                   val balanceDecimal = MifareUtils.byteArrayHexStringToDecimal(balanceByte)
+                   Log.d("readxxxxx","balance decimal string:: ${balanceDecimal.toString()}")
                 }
                 Log.d(TAG, "piccM1ReadBlock ret:$ret")
                 ret = easyLink!!.piccRemove(EPiccRemoveMode.REMOVE, 0.toByte())
@@ -238,24 +242,46 @@ class MifareOneSetting() : Activity(), View.OnClickListener, MifareInternalEvent
                     outPiccCardInfo.serialInfo
                 )
                 Log.d(TAG, "piccM1Authority ret:$ret")
-                val readBlkValue = ByteArray(16)
-                ret = easyLink!!.piccM1Operate(
-                    EM1OperateType.DECREMENT,
-                    ConstantsMifare.VALUE_BLOCK_NUMBER.toByte(),
-                    MifareUtils.decimalToByteArray(value),
-                    ConstantsMifare.VALUE_BLOCK_NUMBER.toByte()
-                )
-                Log.d(TAG, "piccM1Operate decreament ret:$ret")
                 if (ret == 0) {
-                    this@MifareOneSetting.onCardChargeDone(ret, value.toString(), "charge")
+                    val readBlkValue = ByteArray(16)
+                    Log.d("readxxx","readblockvalue:: ${Utils.bcd2Str(readBlkValue)}")
                     ret = easyLink!!.piccM1ReadBlock(
                         ConstantsMifare.VALUE_BLOCK_NUMBER.toByte(),
                         readBlkValue
                     )
+                    Log.d("readxxxxx","readblockvalue:: ${Utils.bcd2Str(readBlkValue)}")
+                    if (ret == 0) {
+                        val balanceString = Utils.bcd2Str(readBlkValue).take(8)
+                        Log.d("readxxxxx","balance string:: ${balanceString}")
+                        val balanceByte = MifareUtils.hexadecimalStringToByteArray(balanceString)
+                        val balanceDecimal = MifareUtils.byteArrayHexStringToDecimal(balanceByte)
+                        Log.d("readxxxxx","balance decimal string:: ${balanceDecimal.toString()}")
 
-                    Log.d(TAG, "piccM1ReadBlock ret:$ret")
-                    Log.d("readxxx","readblockvalue:: ${Utils.bcd2Str(readBlkValue)}")
+                        if (balanceDecimal >= value) {
+                            val readBlkValuex = ByteArray(16)
+                            ret = easyLink!!.piccM1Operate(
+                                EM1OperateType.DECREMENT,
+                                ConstantsMifare.VALUE_BLOCK_NUMBER.toByte(),
+                                MifareUtils.decimalToByteArray(value),
+                                ConstantsMifare.VALUE_BLOCK_NUMBER.toByte()
+                            )
+                            Log.d(TAG, "piccM1Operate decreament ret:$ret")
+                            this@MifareOneSetting.onCardChargeDone(ret, value.toString(), "charge")
+                            if (ret == 0) {
+                                ret = easyLink!!.piccM1ReadBlock(
+                                    ConstantsMifare.VALUE_BLOCK_NUMBER.toByte(),
+                                    readBlkValuex
+                                )
+
+                                Log.d(TAG, "piccM1ReadBlock ret:$ret")
+                                Log.d("readxxx","readblockvalue:: ${Utils.bcd2Str(readBlkValuex)}")
+                            }
+                        } else {
+                            this@MifareOneSetting.onCardChargeDone(ConstantsMifare.INSUFFICIENT_BALANCE_CODE, value.toString(), "charge", "Insufficient Balance")
+                        }
+                    }
                 }
+
                 easyLink!!.piccClose()
                 easyLink!!.piccLight(0x02.toByte(), ELedStatus.OFF)
             }
@@ -820,7 +846,7 @@ class MifareOneSetting() : Activity(), View.OnClickListener, MifareInternalEvent
 
     }
 
-    override fun onCardChargeDone(ret: Int, value: String, usage: String) {
-        println("on card charge done ::::: ret == $ret ::::: usage == $usage ::::: value == $value")
+    override fun onCardChargeDone(ret: Int, value: String, usage: String, message: String?) {
+        println("on card charge done ::::: ret == $ret ::::: usage == $usage ::::: value == $value ::::: message == $message")
     }
 }

@@ -8,5 +8,6 @@ interface MifareEventListener {
 interface MifareInternalEventListener {
     fun onCardResetDone(ret: Int)
     fun onCardReadDone(ret: Int, value: String, usage: String)
-    fun onCardChargeDone(ret: Int, value: String, usage: String)
+    fun onCardChargeDone(ret: Int, value: String, usage: String, message: String? = "")
+
 }
