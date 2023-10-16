@@ -8,12 +8,31 @@
 
     <Button
         android:id="@+id/test_bt_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:text="Test Bluetooth Connection"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/test_file_btn"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="Test File upload"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/test_bt_btn" />
+
+    <Button
+        android:id="@+id/test_mifare_btn"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="Test Mifare Card"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/test_file_btn" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -37,6 +37,16 @@
             android:name=".ui.BluetoothActivity"
             android:exported="false">
         </activity>
+
+        <activity android:name=".ui.SelectFileActivity"
+            android:exported="false">
+
+        </activity>
+
+        <activity android:name=".ui.MifareOneSetting"
+            android:exported="false">
+
+        </activity>
     </application>
 
 </manifest>
