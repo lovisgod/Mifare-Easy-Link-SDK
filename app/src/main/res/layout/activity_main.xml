@@ -29,10 +29,19 @@
         android:id="@+id/test_mifare_btn"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:text="Test Mifare Card"
+        android:text="Test Charge Card"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/test_file_btn" />
+
+    <Button
+        android:id="@+id/test_mifare_balance_btn"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="Test Check Card  Balance"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/test_mifare_btn" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

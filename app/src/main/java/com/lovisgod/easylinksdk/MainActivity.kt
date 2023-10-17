@@ -4,7 +4,9 @@ import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.lovisgod.easylinksdk.MifarePlus.MifareEventListener
 import com.lovisgod.easylinksdk.ui.BluetoothActivity
 import com.lovisgod.easylinksdk.ui.MifareOneSetting
 import com.lovisgod.easylinksdk.ui.SelectFileActivity
@@ -13,23 +15,28 @@ import com.paxsz.easylink.api.EasyLinkSdkManager
 import pax.ecr.protocol.api.Debug
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MifareEventListener {
     lateinit var testBtbtn: Button
     lateinit var testFileBtn: Button
     lateinit var testmifareBtn : Button
+    lateinit var testMifareBalanceBtn: Button
+
+    lateinit var easyLinkSdkApplication: EasyLinkSdkApplication
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        easyLinkSdkApplication = EasyLinkSdkApplication.getInstance()
+        easyLinkSdkApplication.setupMifarelistener(this)
         testBtbtn = findViewById(R.id.test_bt_btn)
         testFileBtn = findViewById(R.id.test_file_btn)
         testmifareBtn = findViewById(R.id.test_mifare_btn)
+        testMifareBalanceBtn = findViewById(R.id.test_mifare_balance_btn)
         handleClick()
     }
 
     private fun handleClick() {
         testBtbtn.setOnClickListener {
-            val intent = Intent(this, BluetoothActivity::class.java)
-            startActivity(intent)
+           easyLinkSdkApplication.initiateConnection()
         }
 
         testFileBtn.setOnClickListener {
@@ -39,10 +46,44 @@ class MainActivity : AppCompatActivity() {
         }
 
         testmifareBtn.setOnClickListener {
-            val intent = Intent(this, MifareOneSetting::class.java)
-//            intent.putExtra("platform", "lite")
-            startActivity(intent)
+           easyLinkSdkApplication.chargeCard(1000)
         }
+
+        testMifareBalanceBtn.setOnClickListener {
+            easyLinkSdkApplication.readCardBalance()
+        }
+    }
+
+    override fun onCardActivated(ret: Int) {
+       runOnUiThread {
+           Toast.makeText(this,
+               "Card activation result ::: $ret",
+               Toast.LENGTH_SHORT).show()
+       }
+    }
+
+    override fun onCardChargeDone(ret: Int, value: String, usage: String, message: String?) {
+       runOnUiThread {
+           Toast.makeText(this,
+               "charge done :: ret:: $ret::::value:::$value:::usage::$usage:::message:::$message",
+               Toast.LENGTH_SHORT).show()
+       }
+    }
+
+    override fun onCardBalanceRead(ret: Int, balance: String) {
+       runOnUiThread {
+           Toast.makeText(this,
+               "balance read :::: ret:::$ret:::: balance:::${balance}",
+               Toast.LENGTH_SHORT).show()
+       }
+    }
+
+    override fun onCardTopped(ret: Int, value: String, message: String?) {
+       runOnUiThread {
+           Toast.makeText(this,
+               "card topped :::: ret:::$ret::::value::::$value message:::${message}",
+               Toast.LENGTH_SHORT).show()
+       }
     }
 }
 
@@ -51,7 +92,7 @@ class SampleApplication: Application() {
     override fun onCreate() {
         super.onCreate()
 
-        EasyLinkSdkApplication().onCreate(this)
+        EasyLinkSdkApplication.getInstance().onCreate(this)
 
     }
 }

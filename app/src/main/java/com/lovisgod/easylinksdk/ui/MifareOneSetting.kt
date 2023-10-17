@@ -199,6 +199,7 @@ class MifareOneSetting() : Activity(), View.OnClickListener, MifareInternalEvent
                    Log.d("readxxxxx","balance string:: ${balanceString}")
                    val balanceByte = MifareUtils.hexadecimalStringToByteArray(balanceString)
                    val balanceDecimal = MifareUtils.byteArrayHexStringToDecimal(balanceByte)
+                   this@MifareOneSetting.onCardBalanceRead(ret, balanceDecimal.toString())
                    Log.d("readxxxxx","balance decimal string:: ${balanceDecimal.toString()}")
                 }
                 Log.d(TAG, "piccM1ReadBlock ret:$ret")
@@ -838,6 +839,7 @@ class MifareOneSetting() : Activity(), View.OnClickListener, MifareInternalEvent
 
     override fun onCardResetDone(ret: Int) {
         println("on card key reset done ::::: ret == $ret")
+//        this.mifareEventListener?.onCardActivated(ret)
     }
 
     override fun onCardReadDone(ret: Int, value: String, usage: String) {
@@ -847,5 +849,15 @@ class MifareOneSetting() : Activity(), View.OnClickListener, MifareInternalEvent
 
     override fun onCardChargeDone(ret: Int, value: String, usage: String, message: String?) {
         println("on card charge done ::::: ret == $ret ::::: usage == $usage ::::: value == $value ::::: message == $message")
+//        this.mifareEventListener?.onCardChargeDone(ret, value, usage, message)
+    }
+
+    override fun onCardBalanceRead(ret: Int, balance: String) {
+        println("on card balance done ::::: ret == $ret :::::balance == $balance")
+//        this.mifareEventListener?.onCardBalanceRead(ret, balance)
+    }
+
+    override fun onCardTopped(ret: Int, value: String, message: String?) {
+        println("on card topped done ::::: ret == $ret :::::value == $value ::::: message == $message")
     }
 }
