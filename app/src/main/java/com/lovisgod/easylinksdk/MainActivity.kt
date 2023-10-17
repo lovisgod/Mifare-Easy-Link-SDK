@@ -52,9 +52,6 @@ class SampleApplication: Application() {
         super.onCreate()
 
         EasyLinkSdkApplication().onCreate(this)
-        
-        EasyLinkSdkManager.getInstance(this).setDebugMode(true)
-        Debug.setDebugLevel(Debug.EDebugLevel.DEBUG_LEVEL_NONE)
-        GLCommDebug.setDebugLevel(GLCommDebug.EDebugLevel.DEBUG_LEVEL_NONE)
+
     }
 }

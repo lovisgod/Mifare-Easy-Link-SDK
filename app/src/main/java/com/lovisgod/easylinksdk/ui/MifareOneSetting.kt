@@ -178,7 +178,7 @@ class MifareOneSetting() : Activity(), View.OnClickListener, MifareInternalEvent
                     }
                 }
                 val keyType: EM1KeyType = EM1KeyType.TYPE_A
-                val password = configManager!!.getValueByTag(m1keyPassword, "FFFFFFFFFFFF")
+                val password = configManager!!.getValueByTag("${m1keyPassword}${ConstantsMifare.KEY_BLOCK_NUMBER}", "FFFFFFFFFFFF")
 //                val password = "FAFFFAFFFFFA"
                 ret = easyLink!!.piccM1Authority(
                     keyType,
@@ -232,7 +232,7 @@ class MifareOneSetting() : Activity(), View.OnClickListener, MifareInternalEvent
                     }
                 }
                 val keyType: EM1KeyType = EM1KeyType.TYPE_A
-                val password = configManager!!.getValueByTag(m1keyPassword, "FFFFFFFFFFFF")
+                val password = configManager!!.getValueByTag("${m1keyPassword}${ConstantsMifare.KEY_BLOCK_NUMBER}", "FFFFFFFFFFFF")
 //                val password = "FFFFFFFFFFFF"
                 println("password is :::: ${password}")
                 ret = easyLink!!.piccM1Authority(
@@ -310,8 +310,7 @@ class MifareOneSetting() : Activity(), View.OnClickListener, MifareInternalEvent
                         break
                     }
                 }
-                val password = configManager!!.getValueByTag(m1keyPassword, "FFFFFFFFFFFF")
-//                val password = "FFFFFFFFFFFF"
+                val password = "FFFFFFFFFFFF"
                 println("Password is ::: $password")
                 val keyType: EM1KeyType = EM1KeyType.TYPE_A
                 ret = easyLink!!.piccM1Authority(
@@ -326,7 +325,7 @@ class MifareOneSetting() : Activity(), View.OnClickListener, MifareInternalEvent
                     Utils.str2Bcd(value + "FF078069FFFFFFFFFFFF")
                 )
                 if (ret == 0) {
-                    configManager!!.saveTagValue(m1keyPassword, value)
+                    configManager!!.saveTagValue("${m1keyPassword}${ConstantsMifare.KEY_BLOCK_NUMBER}", value)
                 }
                 this@MifareOneSetting.onCardResetDone(ret)
 
@@ -361,8 +360,8 @@ class MifareOneSetting() : Activity(), View.OnClickListener, MifareInternalEvent
                         break
                     }
                 }
-//                val password = configManager!!.getValueByTag(m1keyPassword, "FFFFFFFFFFFF")
-                val password = "FFFFFFFFFFFF"
+                val password = configManager!!.getValueByTag("${m1keyPassword}${ConstantsMifare.KEY_BLOCK_NUMBER}", "FFFFFFFFFFFF")
+//                val password = "FFFFFFFFFFFF"
                 val keyType: EM1KeyType = EM1KeyType.TYPE_A
                 ret = easyLink!!.piccM1Authority(
                     keyType,
