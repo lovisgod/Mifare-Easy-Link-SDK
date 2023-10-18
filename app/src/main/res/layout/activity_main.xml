@@ -43,5 +43,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/test_mifare_btn" />
 
+    <Button
+        android:id="@+id/test_mifare_param_btn"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="Test Load Param"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/test_mifare_balance_btn" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

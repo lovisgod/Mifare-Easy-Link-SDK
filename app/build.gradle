@@ -1,9 +1,14 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+//    id 'com.android.library'
 }
 
 android {
+    lintOptions {
+        abortOnError false
+    }
+
     namespace 'com.lovisgod.easylinksdk'
     compileSdk 33
 

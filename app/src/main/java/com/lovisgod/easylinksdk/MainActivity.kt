@@ -12,6 +12,7 @@ import com.lovisgod.easylinksdk.ui.MifareOneSetting
 import com.lovisgod.easylinksdk.ui.SelectFileActivity
 import com.pax.gl.commhelper.impl.GLCommDebug
 import com.paxsz.easylink.api.EasyLinkSdkManager
+import com.paxsz.easylink.listener.FileDownloadListener
 import pax.ecr.protocol.api.Debug
 
 
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity(), MifareEventListener {
     lateinit var testFileBtn: Button
     lateinit var testmifareBtn : Button
     lateinit var testMifareBalanceBtn: Button
+    lateinit var testMifareLoadParamsBtn: Button
 
     lateinit var easyLinkSdkApplication: EasyLinkSdkApplication
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +33,7 @@ class MainActivity : AppCompatActivity(), MifareEventListener {
         testFileBtn = findViewById(R.id.test_file_btn)
         testmifareBtn = findViewById(R.id.test_mifare_btn)
         testMifareBalanceBtn = findViewById(R.id.test_mifare_balance_btn)
+        testMifareLoadParamsBtn = findViewById(R.id.test_mifare_param_btn)
         handleClick()
     }
 
@@ -51,6 +54,10 @@ class MainActivity : AppCompatActivity(), MifareEventListener {
 
         testMifareBalanceBtn.setOnClickListener {
             easyLinkSdkApplication.readCardBalance()
+        }
+
+        testMifareLoadParamsBtn.setOnClickListener {
+            easyLinkSdkApplication.loadParamsToDevice(this, myFileDownloadListener())
         }
     }
 
@@ -84,6 +91,25 @@ class MainActivity : AppCompatActivity(), MifareEventListener {
                "card topped :::: ret:::$ret::::value::::$value message:::${message}",
                Toast.LENGTH_SHORT).show()
        }
+    }
+
+}
+
+
+ class myFileDownloadListener : FileDownloadListener {
+    var percent: String? = null
+    override fun onDownloadProgress(current: Int, total: Int) {
+        percent = "$current/$total"
+        println("${percent}")
+//        runOnUiThread {
+//            alertDialog1!!.setMessage(percent)
+//            alertDialog1!!.show()
+//        }
+    }
+
+    override fun cancelDownload(): Boolean {
+        // TODO Auto-generated method stub
+        return false
     }
 }
 

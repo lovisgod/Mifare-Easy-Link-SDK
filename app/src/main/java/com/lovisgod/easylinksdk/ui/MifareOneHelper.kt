@@ -24,8 +24,10 @@ import com.lovisgod.easylinksdk.MifarePlus.MifareInternalEventListener
 import com.lovisgod.easylinksdk.manage.ConfigManager
 import com.lovisgod.easylinksdk.utils.ConstantsMifare
 import com.lovisgod.easylinksdk.utils.MifareUtils
+import com.lovisgod.easylinksdk.utils.ParameterUtils
 import com.lovisgod.easylinksdk.utils.Utils
 import com.paxsz.easylink.api.EasyLinkSdkManager
+import com.paxsz.easylink.listener.FileDownloadListener
 import com.paxsz.easylink.model.picc.EDetectMode
 import com.paxsz.easylink.model.picc.ELedStatus
 import com.paxsz.easylink.model.picc.EM1KeyType
@@ -86,6 +88,9 @@ class MifareOneHelper private constructor():  MifareInternalEventListener {
     }
 
 
+    fun loadParamsToDevice(context: Context, fileDownloadListener: FileDownloadListener) {
+        ParameterUtils().loadParameterFiles(context, easyLink!!, fileDownloadListener)
+    }
 
     fun activateCard() {
        resetDefaultKey()

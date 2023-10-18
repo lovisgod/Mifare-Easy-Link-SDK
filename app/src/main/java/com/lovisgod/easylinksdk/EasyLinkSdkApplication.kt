@@ -1,12 +1,14 @@
 package com.lovisgod.easylinksdk
 
 import android.app.Application
+import android.content.Context
 import android.content.Intent
 import com.lovisgod.easylinksdk.MifarePlus.MifareEventListener
 import com.lovisgod.easylinksdk.ui.BluetoothActivity
 import com.lovisgod.easylinksdk.ui.MifareOneHelper
 import com.pax.gl.commhelper.impl.GLCommDebug
 import com.paxsz.easylink.api.EasyLinkSdkManager
+import com.paxsz.easylink.listener.FileDownloadListener
 import pax.ecr.protocol.api.Debug
 
 class EasyLinkSdkApplication private constructor(){
@@ -63,5 +65,8 @@ class EasyLinkSdkApplication private constructor(){
     fun addValue(value: Int) = mifareOneHelper.addValue(value.toString())
 
     fun initiateConnection() = showScreen(BluetoothActivity::class.java)
+
+    fun loadParamsToDevice(context: Context, fileDownloadListener: FileDownloadListener) =
+        mifareOneHelper.loadParamsToDevice(context, fileDownloadListener)
 
 }
