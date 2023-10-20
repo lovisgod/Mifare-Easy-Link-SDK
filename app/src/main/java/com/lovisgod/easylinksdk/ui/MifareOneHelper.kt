@@ -18,6 +18,7 @@
 package com.lovisgod.easylinksdk.ui
 
 import android.content.Context
+import android.provider.ContactsContract.Data
 import android.util.Log
 import com.lovisgod.easylinksdk.MifarePlus.MifareEventListener
 import com.lovisgod.easylinksdk.MifarePlus.MifareInternalEventListener
@@ -28,12 +29,16 @@ import com.lovisgod.easylinksdk.utils.ParameterUtils
 import com.lovisgod.easylinksdk.utils.Utils
 import com.paxsz.easylink.api.EasyLinkSdkManager
 import com.paxsz.easylink.listener.FileDownloadListener
+import com.paxsz.easylink.model.DataModel
+import com.paxsz.easylink.model.ShowPageInfo
+import com.paxsz.easylink.model.UIRespInfo
 import com.paxsz.easylink.model.picc.EDetectMode
 import com.paxsz.easylink.model.picc.ELedStatus
 import com.paxsz.easylink.model.picc.EM1KeyType
 import com.paxsz.easylink.model.picc.EM1OperateType
 import com.paxsz.easylink.model.picc.EPiccRemoveMode
 import com.paxsz.easylink.model.picc.PiccCardInfo
+import java.io.ByteArrayOutputStream
 
 class MifareOneHelper private constructor():  MifareInternalEventListener {
 
@@ -101,12 +106,14 @@ class MifareOneHelper private constructor():  MifareInternalEventListener {
             var ret = easyLink!!.piccOpen()
             val flag = true
             val outPiccCardInfo = PiccCardInfo()
+            showPage(message = "Kindly tap your card.....")
             Log.d(TAG, "piccOpen ret:$ret")
             easyLink!!.piccLight(0x02.toByte(), ELedStatus.ON)
             while (flag) {
                 ret = easyLink!!.piccDetect(EDetectMode.ONLY_M, outPiccCardInfo)
                 Log.d(TAG, "piccDetect ret:$ret")
                 if (ret == 0) {
+                    showPage(message = "Please wait......")
                     Log.d(
                         TAG,
                         "piccDetect getSerialInfo:" + Utils.bcd2Str(outPiccCardInfo.serialInfo)
@@ -119,7 +126,7 @@ class MifareOneHelper private constructor():  MifareInternalEventListener {
             val keyType: EM1KeyType = EM1KeyType.TYPE_A
             val password = configManager!!.getValueByTag(
                 "${m1keyPassword}${ConstantsMifare.KEY_BLOCK_NUMBER}",
-                "FFFFFFFFFFFF"
+                "FAFFFAFFFFFA"
             )
             //                val password = "FAFFFAFFFFFA"
             ret = easyLink!!.piccM1Authority(
@@ -144,6 +151,7 @@ class MifareOneHelper private constructor():  MifareInternalEventListener {
                 this@MifareOneHelper.onCardBalanceRead(ret, balanceDecimal.toString())
                 Log.d("readxxxxx", "balance decimal string:: ${balanceDecimal.toString()}")
             }
+            showPage(message = "Welcome")
             Log.d(TAG, "piccM1ReadBlock ret:$ret")
             ret = easyLink!!.piccRemove(EPiccRemoveMode.REMOVE, 0.toByte())
             Log.d(TAG, "piccRemove ret:$ret")
@@ -157,12 +165,14 @@ class MifareOneHelper private constructor():  MifareInternalEventListener {
             var ret = easyLink!!.piccOpen()
             val flag = true
             val outPiccCardInfo = PiccCardInfo()
+            showPage(message = "Kindly tap your card.....")
             Log.d(TAG, "piccOpen ret:$ret")
             easyLink!!.piccLight(0x02.toByte(), ELedStatus.ON)
             while (flag) {
                 ret = easyLink!!.piccDetect(EDetectMode.ONLY_M, outPiccCardInfo)
                 Log.d(TAG, "piccDetect ret:$ret")
                 if (ret == 0) {
+                    showPage(message = "Please wait......")
                     Log.d(
                         TAG,
                         "piccDetect getSerialInfo:" + Utils.bcd2Str(outPiccCardInfo.serialInfo)
@@ -175,7 +185,7 @@ class MifareOneHelper private constructor():  MifareInternalEventListener {
             val keyType: EM1KeyType = EM1KeyType.TYPE_A
             val password = configManager!!.getValueByTag(
                 "${m1keyPassword}${ConstantsMifare.KEY_BLOCK_NUMBER}",
-                "FFFFFFFFFFFF"
+                "FAFFFAFFFFFA"
             )
             //                val password = "FFFFFFFFFFFF"
             println("password is :::: ${password}")
@@ -230,7 +240,7 @@ class MifareOneHelper private constructor():  MifareInternalEventListener {
                     }
                 }
             }
-
+            showPage(message = "Welcome")
             easyLink!!.piccClose()
             easyLink!!.piccLight(0x02.toByte(), ELedStatus.OFF)
         }.start()
@@ -257,7 +267,7 @@ class MifareOneHelper private constructor():  MifareInternalEventListener {
                     break
                 }
             }
-            val password = "FFFFFFFFFFFF"
+            val password = "FAFFFAFFFFFA"
             println("Password is ::: $password")
             val keyType: EM1KeyType = EM1KeyType.TYPE_A
             ret = easyLink!!.piccM1Authority(
@@ -310,7 +320,7 @@ class MifareOneHelper private constructor():  MifareInternalEventListener {
             }
             val password = configManager!!.getValueByTag(
                 "${m1keyPassword}${ConstantsMifare.KEY_BLOCK_NUMBER}",
-                "FFFFFFFFFFFF"
+                "FAFFFAFFFFFA"
             )
             //                val password = "FFFFFFFFFFFF"
             val keyType: EM1KeyType = EM1KeyType.TYPE_A
@@ -368,7 +378,7 @@ class MifareOneHelper private constructor():  MifareInternalEventListener {
 
             val password = configManager!!.getValueByTag(
                 "${m1keyPassword}${ConstantsMifare.KEY_BLOCK_NUMBER}",
-                "FFFFFFFFFFFF"
+                "FAFFFAFFFFFA"
             )
 
             ret = easyLink!!.piccM1Authority(
@@ -426,6 +436,20 @@ class MifareOneHelper private constructor():  MifareInternalEventListener {
     override fun onCardTopped(ret: Int, value: String, message: String?) {
         println("on card topped done ::::: ret == $ret :::::value == $value ::::: message == $message")
         this.mifareEventListener?.onCardTopped(ret, value, message)
+    }
+
+
+    private fun showPage(pageName: String? = "TapCard.xml", message: String?) {
+      Thread {
+         var pageInfoList = arrayListOf<ShowPageInfo>()
+         var showPageInfoTitle = ShowPageInfo("textAmt", "::Dear Customer::")
+         var showPageInfo = ShowPageInfo("text1", message)
+         pageInfoList.add(showPageInfoTitle)
+         pageInfoList.add(showPageInfo)
+         var uiRespInfo = UIRespInfo()
+         val ret = easyLink?.showPage(pageName, 0, pageInfoList, uiRespInfo)
+
+      }.start()
     }
 
 }

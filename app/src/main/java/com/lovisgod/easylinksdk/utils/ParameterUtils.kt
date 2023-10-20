@@ -5,6 +5,8 @@ import android.content.res.AssetManager
 import android.util.Log
 import com.paxsz.easylink.api.EasyLinkSdkManager
 import com.paxsz.easylink.listener.FileDownloadListener
+import com.paxsz.easylink.model.DataModel
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -26,6 +28,10 @@ class ParameterUtils {
                 var ret =easyLinkSdkManager.fileDownLoad(temFilePath, fileDownloadListener)
                 println("file download ret:::::: $ret")
             }
+            var failedTags = ByteArrayOutputStream()
+            val data = Utils.str2Bcd("03210101")
+            val setDataRet =easyLinkSdkManager.setData(DataModel.DataType.CONFIGURATION_DATA, data, failedTags)
+            println("set display delay data::: ret $setDataRet")
 
         } catch (e1: IOException) {
             e1.printStackTrace()

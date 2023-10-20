@@ -1,7 +1,7 @@
 plugins {
-//    id 'com.android.application'
+    id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'com.android.library'
+//    id 'com.android.library'
 }
 
 android {
@@ -13,7 +13,7 @@ android {
     compileSdk 33
 
     defaultConfig {
-//        applicationId "com.lovisgod.easylinksdk"
+        applicationId "com.lovisgod.easylinksdk"
         minSdk 24
         targetSdk 33
         versionCode 1
