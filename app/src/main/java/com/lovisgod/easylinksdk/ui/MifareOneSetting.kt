@@ -199,7 +199,8 @@ class MifareOneSetting() : Activity(), View.OnClickListener, MifareInternalEvent
                    Log.d("readxxxxx","balance string:: ${balanceString}")
                    val balanceByte = MifareUtils.hexadecimalStringToByteArray(balanceString)
                    val balanceDecimal = MifareUtils.byteArrayHexStringToDecimal(balanceByte)
-                   this@MifareOneSetting.onCardBalanceRead(ret, balanceDecimal.toString())
+                   this@MifareOneSetting.onCardBalanceRead(ret, balanceDecimal.toString(),
+                       Utils.bcd2Str(outPiccCardInfo.serialInfo))
                    Log.d("readxxxxx","balance decimal string:: ${balanceDecimal.toString()}")
                 }
                 Log.d(TAG, "piccM1ReadBlock ret:$ret")
@@ -267,7 +268,7 @@ class MifareOneSetting() : Activity(), View.OnClickListener, MifareInternalEvent
                                 ConstantsMifare.VALUE_BLOCK_NUMBER.toByte()
                             )
                             Log.d(TAG, "piccM1Operate decreament ret:$ret")
-                            this@MifareOneSetting.onCardChargeDone(ret, value.toString(), "charge")
+                            this@MifareOneSetting.onCardChargeDone(ret, value.toString(), "", "charge")
                             if (ret == 0) {
                                 ret = easyLink!!.piccM1ReadBlock(
                                     ConstantsMifare.VALUE_BLOCK_NUMBER.toByte(),
@@ -328,7 +329,7 @@ class MifareOneSetting() : Activity(), View.OnClickListener, MifareInternalEvent
                 if (ret == 0) {
                     configManager!!.saveTagValue("${m1keyPassword}${ConstantsMifare.KEY_BLOCK_NUMBER}", value)
                 }
-                this@MifareOneSetting.onCardResetDone(ret)
+                this@MifareOneSetting.onCardResetDone(ret, Utils.bcd2Str(outPiccCardInfo.serialInfo))
 
                 Log.d(TAG, "change key ret:$ret")
                 flowResult += "change key ret ="
@@ -837,27 +838,27 @@ class MifareOneSetting() : Activity(), View.OnClickListener, MifareInternalEvent
         private val m1keyblkValue = "blkValue"
     }
 
-    override fun onCardResetDone(ret: Int) {
+    override fun onCardResetDone(ret: Int, serialInfo: String) {
         println("on card key reset done ::::: ret == $ret")
 //        this.mifareEventListener?.onCardActivated(ret)
     }
 
-    override fun onCardReadDone(ret: Int, value: String, usage: String) {
+    override fun onCardReadDone(ret: Int, value: String, usage: String, serialInfo: String) {
        println("on card read done ::::: ret == $ret ::::: usage == $usage ::::: value == $value")
 
     }
 
-    override fun onCardChargeDone(ret: Int, value: String, usage: String, message: String?) {
+    override fun onCardChargeDone(ret: Int, value: String, usage: String, serialInfo: String, message: String?) {
         println("on card charge done ::::: ret == $ret ::::: usage == $usage ::::: value == $value ::::: message == $message")
 //        this.mifareEventListener?.onCardChargeDone(ret, value, usage, message)
     }
 
-    override fun onCardBalanceRead(ret: Int, balance: String) {
+    override fun onCardBalanceRead(ret: Int, balance: String, serialInfo: String) {
         println("on card balance done ::::: ret == $ret :::::balance == $balance")
 //        this.mifareEventListener?.onCardBalanceRead(ret, balance)
     }
 
-    override fun onCardTopped(ret: Int, value: String, message: String?) {
+    override fun onCardTopped(ret: Int, value: String,serialInfo: String, message: String?) {
         println("on card topped done ::::: ret == $ret :::::value == $value ::::: message == $message")
     }
 }

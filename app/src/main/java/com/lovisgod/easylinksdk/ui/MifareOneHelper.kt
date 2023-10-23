@@ -148,7 +148,8 @@ class MifareOneHelper private constructor():  MifareInternalEventListener {
                 Log.d("readxxxxx", "balance string:: ${balanceString}")
                 val balanceByte = MifareUtils.hexadecimalStringToByteArray(balanceString)
                 val balanceDecimal = MifareUtils.byteArrayHexStringToDecimal(balanceByte)
-                this@MifareOneHelper.onCardBalanceRead(ret, balanceDecimal.toString())
+                this@MifareOneHelper.onCardBalanceRead(ret,
+                    balanceDecimal.toString(), Utils.bcd2Str(outPiccCardInfo.serialInfo))
                 Log.d("readxxxxx", "balance decimal string:: ${balanceDecimal.toString()}")
             }
             showPage(message = "Welcome")
@@ -220,7 +221,8 @@ class MifareOneHelper private constructor():  MifareInternalEventListener {
                             ConstantsMifare.VALUE_BLOCK_NUMBER.toByte()
                         )
                         Log.d(TAG, "piccM1Operate decreament ret:$ret")
-                        this@MifareOneHelper.onCardChargeDone(ret, value.toString(), "charge")
+                        this@MifareOneHelper.onCardChargeDone(ret,
+                            value.toString(), Utils.bcd2Str(outPiccCardInfo.serialInfo), "charge")
                         if (ret == 0) {
                             ret = easyLink!!.piccM1ReadBlock(
                                 ConstantsMifare.VALUE_BLOCK_NUMBER.toByte(),
@@ -235,6 +237,7 @@ class MifareOneHelper private constructor():  MifareInternalEventListener {
                             ConstantsMifare.INSUFFICIENT_BALANCE_CODE,
                             value.toString(),
                             "charge",
+                             Utils.bcd2Str(outPiccCardInfo.serialInfo),
                             "Insufficient Balance"
                         )
                     }
@@ -287,7 +290,7 @@ class MifareOneHelper private constructor():  MifareInternalEventListener {
                     value
                 )
             }
-            this@MifareOneHelper.onCardResetDone(ret)
+            this@MifareOneHelper.onCardResetDone(ret, Utils.bcd2Str(outPiccCardInfo.serialInfo))
 
             Log.d(TAG, "change key ret:$ret")
             flowResult += "change key ret ="
@@ -413,29 +416,29 @@ class MifareOneHelper private constructor():  MifareInternalEventListener {
     }
 
 
-    override fun onCardResetDone(ret: Int) {
+    override fun onCardResetDone(ret: Int, serialInfo: String) {
         println("on card key reset done ::::: ret == $ret")
-        this.mifareEventListener?.onCardActivated(ret)
+        this.mifareEventListener?.onCardActivated(ret, serialInfo)
     }
 
-    override fun onCardReadDone(ret: Int, value: String, usage: String) {
+    override fun onCardReadDone(ret: Int, value: String, usage: String, serialInfo: String) {
        println("on card read done ::::: ret == $ret ::::: usage == $usage ::::: value == $value")
 
     }
 
-    override fun onCardChargeDone(ret: Int, value: String, usage: String, message: String?) {
+    override fun onCardChargeDone(ret: Int, value: String, usage: String, serialInfo: String, message: String?) {
         println("on card charge done ::::: ret == $ret ::::: usage == $usage ::::: value == $value ::::: message == $message")
-        this.mifareEventListener?.onCardChargeDone(ret, value, usage, message)
+        this.mifareEventListener?.onCardChargeDone(ret, value, usage, serialInfo, message)
     }
 
-    override fun onCardBalanceRead(ret: Int, balance: String) {
+    override fun onCardBalanceRead(ret: Int, balance: String, serialInfo: String) {
         println("on card balance done ::::: ret == $ret :::::balance == $balance")
-        this.mifareEventListener?.onCardBalanceRead(ret, balance)
+        this.mifareEventListener?.onCardBalanceRead(ret, balance, serialInfo)
     }
 
-    override fun onCardTopped(ret: Int, value: String, message: String?) {
+    override fun onCardTopped(ret: Int, value: String, serialInfo: String, message: String?) {
         println("on card topped done ::::: ret == $ret :::::value == $value ::::: message == $message")
-        this.mifareEventListener?.onCardTopped(ret, value, message)
+        this.mifareEventListener?.onCardTopped(ret, value, serialInfo, message)
     }
 
 

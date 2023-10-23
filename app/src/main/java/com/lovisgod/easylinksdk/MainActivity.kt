@@ -61,34 +61,35 @@ class MainActivity : AppCompatActivity(), MifareEventListener {
         }
     }
 
-    override fun onCardActivated(ret: Int) {
+    override fun onCardActivated(ret: Int, serialInfo: String) {
        runOnUiThread {
            Toast.makeText(this,
-               "Card activation result ::: $ret",
+               "Card activation result ::: $ret ::serial :: $serialInfo",
                Toast.LENGTH_SHORT).show()
        }
     }
 
-    override fun onCardChargeDone(ret: Int, value: String, usage: String, message: String?) {
+    override fun onCardChargeDone(ret: Int, value: String,
+                                  usage: String, serialInfo: String, message: String?) {
        runOnUiThread {
            Toast.makeText(this,
-               "charge done :: ret:: $ret::::value:::$value:::usage::$usage:::message:::$message",
+               "charge done :: ret:: $ret::::value:::$value:::usage::$usage:::message:::$message :: serial :: $serialInfo",
                Toast.LENGTH_SHORT).show()
        }
     }
 
-    override fun onCardBalanceRead(ret: Int, balance: String) {
+    override fun onCardBalanceRead(ret: Int, balance: String, serialInfo: String) {
        runOnUiThread {
            Toast.makeText(this,
-               "balance read :::: ret:::$ret:::: balance:::${balance}",
+               "balance read :::: ret:::$ret:::: balance:::${balance}:: serial :: $serialInfo",
                Toast.LENGTH_SHORT).show()
        }
     }
 
-    override fun onCardTopped(ret: Int, value: String, message: String?) {
+    override fun onCardTopped(ret: Int, value: String, serialInfo: String, message: String?) {
        runOnUiThread {
            Toast.makeText(this,
-               "card topped :::: ret:::$ret::::value::::$value message:::${message}",
+               "card topped :::: ret:::$ret::::value::::$value message:::${message}:: serial :: $serialInfo",
                Toast.LENGTH_SHORT).show()
        }
     }
